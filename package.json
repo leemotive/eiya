@@ -1,0 +1,31 @@
+{
+  "name": "eiya",
+  "version": "1.0.0",
+  "description": "日期时间处理工具",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leemotive/eiya.git"
+  },
+  "keywords": [
+    "date",
+    "time",
+    "timezone"
+  ],
+  "author": "wstation@163.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/leemotive/eiya/issues"
+  },
+  "homepage": "https://github.com/leemotive/eiya#readme",
+  "devDependencies": {
+    "@babel/preset-env": "^7.11.5",
+    "husky": "^4.3.0",
+    "jest": "^26.4.2",
+    "lint-staged": "^10.4.0",
+    "prettier": "^2.1.2"
+  }
+}
