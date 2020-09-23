@@ -101,26 +101,13 @@ class Eiya {
     return Eiya.isSame(this.date, eiya.isEiya ? eiya.date : eiya, option);
   }
   isBetween(from, to, option) {
-    return Eiya.isBetween(
-      this.date,
-      from.isEiya ? from.date : from,
-      to.isEiya ? to.date : to,
-      option,
-    );
+    return Eiya.isBetween(this.date, from.isEiya ? from.date : from, to.isEiya ? to.date : to, option);
   }
   isAfter(target, option) {
-    return Eiya.isAfter(
-      this.date,
-      target.isEiya ? target.date : target,
-      option,
-    );
+    return Eiya.isAfter(this.date, target.isEiya ? target.date : target, option);
   }
   isBefore(target, option) {
-    return Eiya.isBefore(
-      this.date,
-      target.isEiya ? target.date : target,
-      option,
-    );
+    return Eiya.isBefore(this.date, target.isEiya ? target.date : target, option);
   }
   add(addend, option) {
     return new Eiya(Eiya.add(this.date, addend, option));
@@ -218,15 +205,7 @@ class Eiya {
     return ((Math.abs(month - 6.5) + 1) & 1) + 30;
   }
   // 月份从0开始
-  static isValidDate(
-    year = 1970,
-    month = 0,
-    date = 1,
-    hour = 0,
-    minute = 0,
-    second = 0,
-    millis = 0,
-  ) {
+  static isValidDate(year = 1970, month = 0, date = 1, hour = 0, minute = 0, second = 0, millis = 0) {
     if (year instanceof Date) {
       return year.toString() !== 'Invalid Date';
     }
@@ -259,9 +238,7 @@ class Eiya {
       option = { precision: option, easy: false };
     }
     const { precision = 'millisecond', easy = false } = option;
-    const fmt = easy
-      ? precisionMapIgnorePrefix[precision]
-      : precisionMap[precision];
+    const fmt = easy ? precisionMapIgnorePrefix[precision] : precisionMap[precision];
     return Eiya.format(date1, fmt) === Eiya.format(date2, fmt);
   }
   // 比较日期是否在from,to两个日期日期中间， precision为比较精度， easy表示是否只比较指定精度而忽略其它精度， left和right表示左右边界的开闭
@@ -269,15 +246,8 @@ class Eiya {
     if (typeof option === 'string') {
       option = { precision: option };
     }
-    const {
-      precision = 'millisecond',
-      easy = false,
-      left = 'close',
-      right = 'close',
-    } = option;
-    const fmt = easy
-      ? precisionMapIgnorePrefix[precision]
-      : precisionMap[precision];
+    const { precision = 'millisecond', easy = false, left = 'close', right = 'close' } = option;
+    const fmt = easy ? precisionMapIgnorePrefix[precision] : precisionMap[precision];
     date = Eiya.format(date, fmt);
     from = Eiya.format(from, fmt);
     to = Eiya.format(to, fmt);
@@ -302,9 +272,7 @@ class Eiya {
     }
     const { precision = 'millisecond', easy = false, self = false } = option;
 
-    const fmt = easy
-      ? precisionMapIgnorePrefix[precision]
-      : precisionMap[precision];
+    const fmt = easy ? precisionMapIgnorePrefix[precision] : precisionMap[precision];
     date = Eiya.format(date, fmt);
     target = Eiya.format(target, fmt);
 
@@ -359,12 +327,7 @@ class Eiya {
     }
     const maxTdate = Eiya.daysInMonth(tyear, tmonth);
     const maxCdate = Eiya.daysInMonth(cyear, cmonth);
-    let tdate =
-      cdate === maxCdate && end
-        ? maxTdate
-        : overstep
-        ? cdate
-        : Math.min(cdate, maxTdate);
+    let tdate = cdate === maxCdate && end ? maxTdate : overstep ? cdate : Math.min(cdate, maxTdate);
 
     const newDate = new Date(date);
     newDate.setFullYear(tyear, tmonth, tdate);
@@ -447,37 +410,34 @@ class Eiya {
 }
 
 function buildReg(fmt) {
-  const regStr = fmt.replace(
-    /y+|Y+|M+|d+|H+|h+|m+|s+|S+|E+|a+|A+/g,
-    (match) => {
-      const type = match[0];
+  const regStr = fmt.replace(/y+|Y+|M+|d+|H+|h+|m+|s+|S+|E+|a+|A+/g, (match) => {
+    const type = match[0];
 
-      if (['y', 'Y'].includes(type)) {
-        if (match.length === 2) {
-          return `(?<y_${match}>\\d{2})`;
-        }
-        return `(?<y_${match}>\\d{1,})`;
+    if (['y', 'Y'].includes(type)) {
+      if (match.length === 2) {
+        return `(?<y_${match}>\\d{2})`;
       }
-      if (['M', 'd', 'H', 'h', 'm', 's', 'E'].includes(type)) {
-        if (locale[match]) {
-          return `(?<${type}_${match}>${locale[match].join('|')})`;
-        }
-        if (match.length === 2) {
-          return `(?<${type}_${match}>\\d{2})`;
-        }
-        return `(?<${type}_${match}>\\d{1,2})`;
+      return `(?<y_${match}>\\d{1,})`;
+    }
+    if (['M', 'd', 'H', 'h', 'm', 's', 'E'].includes(type)) {
+      if (locale[match]) {
+        return `(?<${type}_${match}>${locale[match].join('|')})`;
       }
-      if (type === 'S') {
-        if (match.length === 3) {
-          return `(?<${type}_${match}>\\d{3})`;
-        }
-        return `(?<${type}_${match}>\\d{1,3})`;
+      if (match.length === 2) {
+        return `(?<${type}_${match}>\\d{2})`;
       }
-      if (['a', 'A'].includes(type)) {
-        return `(?<a_${match}>am|pm|AM|PM)`;
+      return `(?<${type}_${match}>\\d{1,2})`;
+    }
+    if (type === 'S') {
+      if (match.length === 3) {
+        return `(?<${type}_${match}>\\d{3})`;
       }
-    },
-  );
+      return `(?<${type}_${match}>\\d{1,3})`;
+    }
+    if (['a', 'A'].includes(type)) {
+      return `(?<a_${match}>am|pm|AM|PM)`;
+    }
+  });
 
   return new RegExp(`^${regStr}$`, 'i');
 }
