@@ -37,7 +37,7 @@ const localeUtils = {
   },
   parse(v, type, fmt) {
     if (locale[fmt]) {
-      return locale[fmt].findIndex((l) => l.toLowerCase() === v.toLowerCase());
+      return locale[fmt].findIndex(l => l.toLowerCase() === v.toLowerCase());
     }
     if (['y', 'Y'].includes(type)) {
       if (fmt.length === 2) {
@@ -132,20 +132,20 @@ class Eiya {
   static format(date, fmt) {
     date = new Date(date);
     let methodNames = {
-      y: (f) => localeUtils.format(date.getFullYear(), f),
-      M: (f) => localeUtils.format(date.getMonth(), f),
-      d: (f) => localeUtils.format(date.getDate(), f),
-      H: (f) => localeUtils.format(date.getHours(), f),
-      h: (f) => localeUtils.format(date.getHours(), f),
-      m: (f) => localeUtils.format(date.getMinutes(), f),
-      s: (f) => localeUtils.format(date.getSeconds(), f),
-      S: (f) => localeUtils.format(date.getMilliseconds(), f),
-      E: (f) => localeUtils.format(date.getDay(), f),
+      y: f => localeUtils.format(date.getFullYear(), f),
+      M: f => localeUtils.format(date.getMonth(), f),
+      d: f => localeUtils.format(date.getDate(), f),
+      H: f => localeUtils.format(date.getHours(), f),
+      h: f => localeUtils.format(date.getHours(), f),
+      m: f => localeUtils.format(date.getMinutes(), f),
+      s: f => localeUtils.format(date.getSeconds(), f),
+      S: f => localeUtils.format(date.getMilliseconds(), f),
+      E: f => localeUtils.format(date.getDay(), f),
       a: () => (date.getHours() > 11 ? 'pm' : 'am'),
       A: () => (date.getHours() > 11 ? 'PM' : 'AM'),
     };
 
-    return fmt.replace(/y+|M+|d+|H+|h+|m+|s+|S+|E+|a|A/g, (match) => {
+    return fmt.replace(/y+|M+|d+|H+|h+|m+|s+|S+|E+|a|A/g, match => {
       const type = match[0];
       return methodNames[type](match);
     });
@@ -410,7 +410,7 @@ class Eiya {
 }
 
 function buildReg(fmt) {
-  const regStr = fmt.replace(/y+|Y+|M+|d+|H+|h+|m+|s+|S+|E+|a+|A+/g, (match) => {
+  const regStr = fmt.replace(/y+|Y+|M+|d+|H+|h+|m+|s+|S+|E+|a+|A+/g, match => {
     const type = match[0];
 
     if (['y', 'Y'].includes(type)) {
