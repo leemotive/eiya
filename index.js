@@ -1,11 +1,58 @@
 const locale = {
-  MMM: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-  MMMM: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-  MMMMM: ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '十二'],
+  MMM: [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ],
+  MMMM: [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ],
+  MMMMM: [
+    '一',
+    '二',
+    '三',
+    '四',
+    '五',
+    '六',
+    '七',
+    '八',
+    '九',
+    '十',
+    '十一',
+    '十二',
+  ],
   EEE: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-  EEEE: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+  EEEE: [
+    'Sunday',
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+  ],
   EEEEE: ['日', '一', '二', '三', '四', '五', '六'],
-}
+};
 
 const localeUtils = {
   format(v, fmt) {
@@ -19,7 +66,7 @@ const localeUtils = {
       return v;
     }
     if (locale[fmt]) {
-      return locale[fmt][v]
+      return locale[fmt][v];
     }
     if (/M/.test(fmt)) {
       v += 1;
@@ -31,7 +78,7 @@ const localeUtils = {
   },
   parse(v, type, fmt) {
     if (locale[fmt]) {
-      return locale[fmt].findIndex(l => l.toLowerCase() === v.toLowerCase());
+      return locale[fmt].findIndex((l) => l.toLowerCase() === v.toLowerCase());
     }
     if (['y', 'Y'].includes(type)) {
       if (fmt.length === 2) {
@@ -69,8 +116,8 @@ const localeUtils = {
       case 'S':
         return now.getMilliseconds();
     }
-  }
-}
+  },
+};
 
 class Eiya {
   constructor(...args) {
@@ -80,28 +127,41 @@ class Eiya {
   }
 
   format(fmt) {
-    return Eiya.format(this.date, fmt)
+    return Eiya.format(this.date, fmt);
   }
   isLeapYear() {
-    return Eiya.isLeapYear(this.date.getFullYear())
+    return Eiya.isLeapYear(this.date.getFullYear());
   }
   daysInMonth() {
-    return Eiya.daysInMonth(this.date.getFullYear(), this.date.getMonth())
+    return Eiya.daysInMonth(this.date.getFullYear(), this.date.getMonth());
   }
   isValidDate() {
     return Eiya.isValidDate(this.date);
   }
   isSame(eiya, option) {
-    return Eiya.isSame(this.date, eiya.isEiya ? eiya.date : eiya, option)
+    return Eiya.isSame(this.date, eiya.isEiya ? eiya.date : eiya, option);
   }
   isBetween(from, to, option) {
-    return Eiya.isBetween(this.date, from.isEiya ? from.date : from, to.isEiya ? to.date : to, option);
+    return Eiya.isBetween(
+      this.date,
+      from.isEiya ? from.date : from,
+      to.isEiya ? to.date : to,
+      option,
+    );
   }
   isAfter(target, option) {
-    return Eiya.isAfter(this.date, target.isEiya ? target.date : target, option);
+    return Eiya.isAfter(
+      this.date,
+      target.isEiya ? target.date : target,
+      option,
+    );
   }
   isBefore(target, option) {
-    return Eiya.isBefore(this.date, target.isEiya ? target.date : target, option);
+    return Eiya.isBefore(
+      this.date,
+      target.isEiya ? target.date : target,
+      option,
+    );
   }
   add(addend, option) {
     return new Eiya(Eiya.add(this.date, addend, option));
@@ -110,10 +170,10 @@ class Eiya {
     return this.add(-subtrahend, option);
   }
   startOf(precision) {
-    return new Eiya(Eiya.startOf(this.date, precision))
+    return new Eiya(Eiya.startOf(this.date, precision));
   }
   endOf(precision) {
-    return new Eiya(Eiya.endOf(this.date, precision))
+    return new Eiya(Eiya.endOf(this.date, precision));
   }
   clone() {
     return new Eiya(this.date);
@@ -123,25 +183,23 @@ class Eiya {
     return Eiya.compare(this.date, date, precision);
   }
 
-
-
   static format(date, fmt) {
-    date = new Date(date)
+    date = new Date(date);
     let methodNames = {
-      y: f => localeUtils.format(date.getFullYear(), f),
-      M: f => localeUtils.format(date.getMonth(), f),
-      d: f => localeUtils.format(date.getDate(), f),
-      H: f => localeUtils.format(date.getHours(), f),
-      h: f => localeUtils.format(date.getHours(), f),
-      m: f => localeUtils.format(date.getMinutes(), f),
-      s: f => localeUtils.format(date.getSeconds(), f),
-      S: f => localeUtils.format(date.getMilliseconds(), f),
-      E: f => localeUtils.format(date.getDay(), f),
-      a: () => date.getHours() > 11 ? 'pm' : 'am',
-      A: () => date.getHours() > 11 ? 'PM' : 'AM',
+      y: (f) => localeUtils.format(date.getFullYear(), f),
+      M: (f) => localeUtils.format(date.getMonth(), f),
+      d: (f) => localeUtils.format(date.getDate(), f),
+      H: (f) => localeUtils.format(date.getHours(), f),
+      h: (f) => localeUtils.format(date.getHours(), f),
+      m: (f) => localeUtils.format(date.getMinutes(), f),
+      s: (f) => localeUtils.format(date.getSeconds(), f),
+      S: (f) => localeUtils.format(date.getMilliseconds(), f),
+      E: (f) => localeUtils.format(date.getDay(), f),
+      a: () => (date.getHours() > 11 ? 'pm' : 'am'),
+      A: () => (date.getHours() > 11 ? 'PM' : 'AM'),
     };
 
-    return fmt.replace(/y+|M+|d+|H+|h+|m+|s+|S+|E+|a|A/g, match => {
+    return fmt.replace(/y+|M+|d+|H+|h+|m+|s+|S+|E+|a|A/g, (match) => {
       const type = match[0];
       return methodNames[type](match);
     });
@@ -150,21 +208,21 @@ class Eiya {
     const fmtReg = buildReg(fmt);
     const match = str.match(fmtReg);
     if (!match) {
-      throw Error('日期字符串和格式字符串不匹配')
+      throw Error('日期字符串和格式字符串不匹配');
     }
 
     const units = {};
     Object.entries(match.groups || {}).forEach(([key, value]) => {
       const [type, fmt] = key.split('_');
       units[type] = localeUtils.parse(value, type, fmt);
-    })
+    });
 
-    let {y, M, d, H, h, m, s, S, E, a} = units;
+    let { y, M, d, H, h, m, s, S, E, a } = units;
     if (H > -1 && (h > -1 || a)) {
-      throw Error('非法格式字符串: H不能和h,a同时存在')
+      throw Error('非法格式字符串: H不能和h,a同时存在');
     }
     if (+!!(h > -1) ^ +!!a) {
-      throw Error('非法格式字符串: h和a必须成对出现')
+      throw Error('非法格式字符串: h和a必须成对出现');
     }
 
     const now = new Date();
@@ -186,7 +244,7 @@ class Eiya {
 
     const date = new Date(y, M, d, H, m, s, S);
     if (E > -1 && date.getDay() !== E) {
-      throw Error('非法日期字符串')
+      throw Error('非法日期字符串');
     }
     return date;
   }
@@ -201,7 +259,15 @@ class Eiya {
     return ((Math.abs(month - 6.5) + 1) & 1) + 30;
   }
   // 月份从0开始
-  static isValidDate(year = 1970, month = 0, date = 1, hour = 0, minute = 0, second = 0, millis = 0) {
+  static isValidDate(
+    year = 1970,
+    month = 0,
+    date = 1,
+    hour = 0,
+    minute = 0,
+    second = 0,
+    millis = 0,
+  ) {
     if (year instanceof Date) {
       return year.toString() !== 'Invalid Date';
     }
@@ -231,19 +297,28 @@ class Eiya {
   // 比较两个日期是否一样，precision为比较精度， easy表示是否只比较指定精度而忽略其它精度
   static isSame(date1, date2, option = {}) {
     if (typeof option === 'string') {
-      option = {precision: option, easy: false};
+      option = { precision: option, easy: false };
     }
-    const {precision = 'millisecond', easy = false} = option;
-    const fmt = easy ? precisionMapIgnorePrefix[precision] : precisionMap[precision];
+    const { precision = 'millisecond', easy = false } = option;
+    const fmt = easy
+      ? precisionMapIgnorePrefix[precision]
+      : precisionMap[precision];
     return Eiya.format(date1, fmt) === Eiya.format(date2, fmt);
   }
   // 比较日期是否在from,to两个日期日期中间， precision为比较精度， easy表示是否只比较指定精度而忽略其它精度， left和right表示左右边界的开闭
   static isBetween(date, from, to, option = {}) {
     if (typeof option === 'string') {
-      option = {precision: option}
+      option = { precision: option };
     }
-    const {precision = 'millisecond', easy = false, left = 'close', right = 'close'} = option;
-    const fmt = easy ? precisionMapIgnorePrefix[precision] : precisionMap[precision];
+    const {
+      precision = 'millisecond',
+      easy = false,
+      left = 'close',
+      right = 'close',
+    } = option;
+    const fmt = easy
+      ? precisionMapIgnorePrefix[precision]
+      : precisionMap[precision];
     date = Eiya.format(date, fmt);
     from = Eiya.format(from, fmt);
     to = Eiya.format(to, fmt);
@@ -264,11 +339,13 @@ class Eiya {
   }
   static isAfter(date, target, option = {}) {
     if (typeof option === 'string') {
-      option = {precision: option}
+      option = { precision: option };
     }
-    const {precision = 'millisecond', easy = false, self = false} = option;
+    const { precision = 'millisecond', easy = false, self = false } = option;
 
-    const fmt = easy ? precisionMapIgnorePrefix[precision] : precisionMap[precision];
+    const fmt = easy
+      ? precisionMapIgnorePrefix[precision]
+      : precisionMap[precision];
     date = Eiya.format(date, fmt);
     target = Eiya.format(target, fmt);
 
@@ -285,11 +362,11 @@ class Eiya {
   }
   static add(date, addend, option = {}) {
     if (typeof option === 'string') {
-      option = {precision: option}
+      option = { precision: option };
     }
-    const {precision = 'millisecond', overstep = false, end = true} = option;
+    const { precision = 'millisecond', overstep = false, end = true } = option;
 
-    switch(precision) {
+    switch (precision) {
       case 'millisecond':
         return new Date(date.getTime() + addend);
       case 'second':
@@ -316,14 +393,19 @@ class Eiya {
     let tyear = cyear;
     if (precision === 'month') {
       tmonth += addend;
-      tyear += Math.floor(tmonth / 12)
+      tyear += Math.floor(tmonth / 12);
       tmonth %= 12;
     } else {
       tyear += addend;
     }
     const maxTdate = Eiya.daysInMonth(tyear, tmonth);
     const maxCdate = Eiya.daysInMonth(cyear, cmonth);
-    let tdate = cdate === maxCdate && end ? maxTdate : overstep ? cdate : Math.min(cdate, maxTdate);
+    let tdate =
+      cdate === maxCdate && end
+        ? maxTdate
+        : overstep
+        ? cdate
+        : Math.min(cdate, maxTdate);
 
     const newDate = new Date(date);
     newDate.setFullYear(tyear, tmonth, tdate);
@@ -360,7 +442,7 @@ class Eiya {
         newDate.setHours(0, 0, 0, 0);
         return newDate;
     }
-    throw Error('错误的精度')
+    throw Error('错误的精度');
   }
   static endOf(date, precision) {
     const newDate = new Date(date);
@@ -390,7 +472,7 @@ class Eiya {
         newDate.setHours(23, 59, 59, 999);
         return newDate;
     }
-    throw Error('错误的精度')
+    throw Error('错误的精度');
   }
   static clone(date) {
     return new Date(date);
@@ -399,41 +481,44 @@ class Eiya {
     if (Eiya.isBefore(date1, date2, precision)) {
       return -1;
     } else if (Eiya.isSame(date1, date2, precision)) {
-      return 0
+      return 0;
     }
     return 1;
   }
 }
 
 function buildReg(fmt) {
-  const regStr = fmt.replace(/y+|Y+|M+|d+|H+|h+|m+|s+|S+|E+|a+|A+/g, match => {
-    const type = match[0];
+  const regStr = fmt.replace(
+    /y+|Y+|M+|d+|H+|h+|m+|s+|S+|E+|a+|A+/g,
+    (match) => {
+      const type = match[0];
 
-    if (['y', 'Y'].includes(type)) {
-      if (match.length === 2) {
-        return `(?<y_${match}>\\d{2})`;
+      if (['y', 'Y'].includes(type)) {
+        if (match.length === 2) {
+          return `(?<y_${match}>\\d{2})`;
+        }
+        return `(?<y_${match}>\\d{1,})`;
       }
-      return `(?<y_${match}>\\d{1,})`;
-    }
-    if (['M', 'd', 'H', 'h', 'm', 's', 'E'].includes(type)) {
-      if (locale[match]) {
-        return `(?<${type}_${match}>${locale[match].join('|')})`
+      if (['M', 'd', 'H', 'h', 'm', 's', 'E'].includes(type)) {
+        if (locale[match]) {
+          return `(?<${type}_${match}>${locale[match].join('|')})`;
+        }
+        if (match.length === 2) {
+          return `(?<${type}_${match}>\\d{2})`;
+        }
+        return `(?<${type}_${match}>\\d{1,2})`;
       }
-      if (match.length === 2) {
-        return `(?<${type}_${match}>\\d{2})`;
+      if (type === 'S') {
+        if (match.length === 3) {
+          return `(?<${type}_${match}>\\d{3})`;
+        }
+        return `(?<${type}_${match}>\\d{1,3})`;
       }
-      return `(?<${type}_${match}>\\d{1,2})`;
-    }
-    if (type === 'S') {
-      if (match.length === 3) {
-        return `(?<${type}_${match}>\\d{3})`
+      if (['a', 'A'].includes(type)) {
+        return `(?<a_${match}>am|pm|AM|PM)`;
       }
-      return `(?<${type}_${match}>\\d{1,3})`
-    }
-    if (['a', 'A'].includes(type)) {
-      return `(?<a_${match}>am|pm|AM|PM)`;
-    }
-  })
+    },
+  );
 
   return new RegExp(`^${regStr}$`, 'i');
 }
@@ -447,7 +532,7 @@ const precisionMap = {
   second: 'yyyy/MM/dd HH:mm:ss',
   millisecond: 'yyyy/MM/dd HH:mm:ss SSS',
   week: 'yyyy/MM/dd',
-}
+};
 const precisionMapIgnorePrefix = {
   year: 'yyyy',
   month: 'MM',
@@ -457,6 +542,6 @@ const precisionMapIgnorePrefix = {
   second: 'ss',
   millisecond: 'SSS',
   week: 'EE',
-}
+};
 
 export default Eiya;
