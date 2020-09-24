@@ -101,8 +101,8 @@ class Eiya {
   isSame(eiya, option) {
     return Eiya.isSame(this.date, eiya.isEiya ? eiya.date : eiya, option);
   }
-  isBetween(from, to, option) {
-    return Eiya.isBetween(this.date, from.isEiya ? from.date : from, to.isEiya ? to.date : to, option);
+  isBetween(start, end, option) {
+    return Eiya.isBetween(this.date, start.isEiya ? start.date : start, end.isEiya ? end.date : end, option);
   }
   isAfter(target, option) {
     return Eiya.isAfter(this.date, target.isEiya ? target.date : target, option);
@@ -210,9 +210,7 @@ class Eiya {
     if (year instanceof Date) {
       return year.toString() !== 'Invalid Date';
     }
-    if (year < 100 && year >= 0) {
-      year = +year + 1900;
-    }
+
     if (month < 0 || month > 11) {
       return false;
     }
@@ -242,27 +240,27 @@ class Eiya {
     const fmt = easy ? precisionMapIgnorePrefix[precision] : precisionMap[precision];
     return Eiya.format(date1, fmt) === Eiya.format(date2, fmt);
   }
-  // 比较日期是否在from,to两个日期日期中间， precision为比较精度， easy表示是否只比较指定精度而忽略其它精度， left和right表示左右边界的开闭
-  static isBetween(date, from, to, option = {}) {
+  // 比较日期是否在start,end两个日期日期中间， precision为比较精度， easy表示是否只比较指定精度而忽略其它精度， left和right表示左右边界的开闭
+  static isBetween(date, start, end, option = {}) {
     if (typeof option === 'string') {
       option = { precision: option };
     }
     const { precision = 'millisecond', easy = false, left = 'close', right = 'close' } = option;
     const fmt = easy ? precisionMapIgnorePrefix[precision] : precisionMap[precision];
     date = Eiya.format(date, fmt);
-    from = Eiya.format(from, fmt);
-    to = Eiya.format(to, fmt);
+    start = Eiya.format(start, fmt);
+    end = Eiya.format(end, fmt);
 
-    if (date < from) {
+    if (date < start) {
       return false;
     }
-    if (date === from && left === 'open') {
+    if (date === start && left === 'open') {
       return false;
     }
-    if (date > to) {
+    if (date > end) {
       return false;
     }
-    if (date === to && right === 'open') {
+    if (date === end && right === 'open') {
       return false;
     }
     return true;
@@ -400,10 +398,10 @@ class Eiya {
   static clone(date) {
     return new Date(date);
   }
-  static compare(date1, date2, precision) {
-    if (Eiya.isBefore(date1, date2, precision)) {
+  static compare(date1, date2, option) {
+    if (Eiya.isBefore(date1, date2, option)) {
       return -1;
-    } else if (Eiya.isSame(date1, date2, precision)) {
+    } else if (Eiya.isSame(date1, date2, option)) {
       return 0;
     }
     return 1;
