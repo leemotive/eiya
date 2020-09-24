@@ -87,6 +87,34 @@ describe('静态方法', () => {
     const args = [2019, 11, 12, 12, 23, 43, 899];
     expect(Eiya.clone(new Date(...args)).getTime()).toBe(new Date(...args).getTime());
   });
+  describe('max', () => {
+    const date1 = new Date(2020, 4, 27, 12, 15, 45, 763);
+    const date2 = new Date(2019, 4, 26, 12, 15, 45, 763);
+    const date3 = new Date(2021, 4, 24, 12, 15, 45, 763);
+    test('最大-默认精度', () => {
+      expect(Eiya.max(date1, date2, date3)).toBe(date3);
+    });
+    test('最大日', () => {
+      expect(Eiya.max('date', date1, date2, date3)).toBe(date3);
+    });
+    test('最大日-easy', () => {
+      expect(Eiya.max({ precision: 'date', easy: true }, date1, date2, date3)).toBe(date1);
+    });
+  });
+  describe('min', () => {
+    const date1 = new Date(2020, 4, 27, 12, 15, 45, 763);
+    const date2 = new Date(2019, 4, 26, 12, 15, 45, 763);
+    const date3 = new Date(2021, 4, 24, 12, 15, 45, 763);
+    test('最小-默认精度', () => {
+      expect(Eiya.min(date1, date2, date3)).toBe(date2);
+    });
+    test('最大日', () => {
+      expect(Eiya.min('date', date1, date2, date3)).toBe(date2);
+    });
+    test('最大日-easy', () => {
+      expect(Eiya.min({ precision: 'date', easy: true }, date1, date2, date3)).toBe(date3);
+    });
+  });
 });
 
 describe('实例方法', () => {

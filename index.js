@@ -33,7 +33,8 @@ const localeUtils = {
     if (/h/.test(fmt)) {
       v = v % 12;
     }
-    return `${v}`.padStart(fmt.length, 0);
+    let maxLength = /S/.test(fmt) ? 3 : 2;
+    return `${v}`.padStart(Math.min(fmt.length, maxLength), 0);
   },
   parse(v, type, fmt) {
     if (locale[fmt]) {
@@ -406,6 +407,48 @@ class Eiya {
       return 0;
     }
     return 1;
+  }
+  static max(option, ...args) {
+    if (option instanceof Date) {
+      args.unshift(option);
+      option = {};
+    } else if (typeof option === 'string') {
+      option = { precision: option };
+    }
+    const { precision = 'millisecond', easy = false } = option;
+    const fmt = easy ? precisionMapIgnorePrefix[precision] : precisionMap[precision];
+    const maxDate = args.reduce(
+      (last, current) => {
+        const date = Eiya.format(current, fmt);
+        if (last.date >= date) {
+          return last;
+        }
+        return { date, max: current };
+      },
+      { date: Eiya.format(args[0], fmt), max: args[0] },
+    );
+    return maxDate.max;
+  }
+  static min(option, ...args) {
+    if (option instanceof Date) {
+      args.unshift(option);
+      option = {};
+    } else if (typeof option === 'string') {
+      option = { precision: option };
+    }
+    const { precision = 'millisecond', easy = false } = option;
+    const fmt = easy ? precisionMapIgnorePrefix[precision] : precisionMap[precision];
+    const maxDate = args.reduce(
+      (last, current) => {
+        const date = Eiya.format(current, fmt);
+        if (last.date <= date) {
+          return last;
+        }
+        return { date, min: current };
+      },
+      { date: Eiya.format(args[0], fmt), min: args[0] },
+    );
+    return maxDate.min;
   }
 }
 
