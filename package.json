@@ -19,7 +19,8 @@
   "keywords": [
     "date",
     "time",
-    "timezone"
+    "format",
+    "parse"
   ],
   "author": "wstation@163.com",
   "license": "ISC",
