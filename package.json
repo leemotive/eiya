@@ -2,7 +2,9 @@
   "name": "eiya",
   "version": "1.0.1",
   "description": "日期时间处理工具",
-  "main": "index.js",
+  "main": "lib/index.js",
+  "module": "es/index.js",
+  "jsnext:main": "es/index.js",
   "scripts": {
     "test": "jest",
     "build": "rm -rf dist es lib && rollup -c && uglifyjs dist/eiya.js -o dist/eiya.min.js"
