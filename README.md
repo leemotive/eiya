@@ -48,7 +48,7 @@ Eiya.startOf(now, 'date');
 
   @param {Date} date 被格式化的日期对象
 
-  @param {String} fmt 格式化字符串, 支持的格式请参考[格式说明](#/格式说明)
+  @param {String} fmt 格式化字符串, 支持的格式请参考[格式说明](#格式说明)
 
 - 示例
 
@@ -92,7 +92,7 @@ Eiya.startOf(now, 'date');
   Eiya.isLeapYear(2020) // true
   ```
 
-> daysInMonth(year, month)
+> Eiya.daysInMonth(year, month)
 
  - 概述
 

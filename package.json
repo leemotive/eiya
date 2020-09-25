@@ -1,6 +1,6 @@
 {
   "name": "eiya",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "日期时间处理工具",
   "main": "index.js",
   "scripts": {
