@@ -28,7 +28,7 @@ const date = new Eiya();
 date.add(1, 'year').subtract('1', 'month').startOf('date');
 
 // 静态方法使用
-const now = new Eiya();
+const now = new Date();
 Eiya.startOf(now, 'date');
 ```
 
@@ -291,6 +291,25 @@ Eiya.startOf(now, 'date');
 
    返回参数日期列表中最小的日期，第一个参数可以是精度设置，支持 `precision` 和 `easy` 
 
+> Eiya.locale(config)
+
+ - 概述
+
+   配置本次的格式，链式调用format，parse进行格式化和解析
+
+- 参数
+
+  支持的配置请参考下面的格式说明
+
+- 示例
+
+  ```js
+  const date = new Date(2020, 1, 12, 12, 24, 45, 235);
+  Eiya.locale({EEE: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']}).format(date, 'EEE');  // We
+  ```
+
+  
+
 
 
 ### 实例方法
@@ -316,3 +335,15 @@ Eiya.startOf(now, 'date');
 | a    | am/pm                                       |
 | A    | AM/PM                                       |
 
+1~2位的基本是数字格式的，1位不补前置0，2位补前置0。默认非数字的格式定义如下
+
+| 格式  | 定义                                                         |
+| ----- | ------------------------------------------------------------ |
+| MMM   | Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec   |
+| MMMM  | January, February, March, April, May, June, July, August, September, October, November, December |
+| MMMMM | 一, 二, 三, 四, 五, 六, 七, 八, 九, 十, 十一, 十二           |
+| EEE   | Sun, Mon, Tue, Wed, Thu, Fri, Sat                            |
+| EEEE  | Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday |
+| EEEEE | 日, 一, 二, 三, 四, 五, 六                                   |
+| a     | am, pm                                                       |
+| A     | AM, PM                                                       |

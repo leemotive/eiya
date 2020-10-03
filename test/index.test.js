@@ -19,7 +19,9 @@ describe('格式化使用', () => {
     expect(now.format('yyyy/MM/dd hh:mm:ss SSS A')).toBe('2020/10/04 09:34:55 234 AM');
   });
   test('下午', () => {
-    expect(date19.format('yy/MMM/dd hh:mm:ss SSS a')).toBe('94/Nov/23 00:12:23 234 pm');
+    expect(date19.locale({ a: ['上午', '下午'] }).format('yy/MMM/dd hh:mm:ss SSS a')).toBe(
+      '94/Nov/23 00:12:23 234 下午',
+    );
   });
   test('1900', () => {
     expect(date19.format('yy/MMM/dd HH:mm:ss SSS')).toBe('94/Nov/23 12:12:23 234');
@@ -323,6 +325,13 @@ describe('实例方法', () => {
   });
 });
 
+describe('locale', () => {
+  const eiya = new Eiya(2020, 2, 20, 14, 15, 16, 348);
+  test('星期两位缩写', () =>
+    expect(eiya.locale({ EEE: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'] }).format('EEE')).toBe('Fr'));
+  test('自定义上下午', () => expect(eiya.locale({ a: ['上午', '下午'] }).format('a')).toBe('下午'));
+});
+
 describe('异常', () => {
   test('y不支持1位或者3位', () => {
     let date = new Eiya(2020, 9, 4, 12, 34, 55, 234);
@@ -333,16 +342,18 @@ describe('异常', () => {
   });
   test('H不能和h同时存在', () => {
     expect(() => Eiya.parse('2020/10/04 09:34:55', 'yyyy/MM/dd HH:hh:ss')).toThrow(
-      '非法格式字符串: H不能和h,a同时存在',
+      '非法格式字符串: H不能和h,a,A同时存在',
     );
   });
   test('H不能和a同时存在', () => {
     expect(() => Eiya.parse('2020/10/04 09:34:55 pm', 'yyyy/MM/dd HH:mm:ss a')).toThrow(
-      '非法格式字符串: H不能和h,a同时存在',
+      '非法格式字符串: H不能和h,a,A同时存在',
     );
   });
   test('h和a必须成对出现', () => {
-    expect(() => Eiya.parse('2020/10/04 09:34:55', 'yyyy/MM/dd hh:mm:ss')).toThrow('非法格式字符串: h和a必须成对出现');
+    expect(() => Eiya.parse('2020/10/04 09:34:55', 'yyyy/MM/dd hh:mm:ss')).toThrow(
+      '非法格式字符串: h和a,A必须成对出现',
+    );
   });
   test('小时超大', () => {
     expect(() => Eiya.parse('2020/10/04 29:34:55', 'yyyy/MM/dd HH:mm:ss')).toThrow('非法日期字符串');

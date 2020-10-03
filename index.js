@@ -1,4 +1,4 @@
-const locale = {
+const defaultLocale = {
   // prettier-ignore
   MMM: [ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
   // prettier-ignore
@@ -11,49 +11,66 @@ const locale = {
   EEEE: [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
   // prettier-ignore
   EEEEE: ['日', '一', '二', '三', '四', '五', '六'],
+  a: ['am', 'pm'],
+  A: ['AM', 'PM'],
+};
+
+const getValue = {
+  M: date => date.getMonth(),
+  d: date => date.getDate(),
+  H: date => date.getHours(),
+  h: date => date.getHours(),
+  m: date => date.getMinutes(),
+  s: date => date.getSeconds(),
+  S: date => date.getMilliseconds(),
+  E: date => date.getDay(),
+  a: date => (date.getHours() / 12) | 0,
+  A: date => (date.getHours() / 12) | 0,
 };
 
 const localeUtils = {
-  format(v, fmt) {
-    if (/y/.test(fmt)) {
-      if (/^19\d{2}$/.test(`${v}`) && fmt.length === 2) {
-        return `${v}`.slice(-2);
+  // format(v, fmt, locale = defaultLocale) {
+  format(date, fmt, locale = defaultLocale) {
+    if (/y/i.test(fmt)) {
+      const year = `${date.getFullYear()}`;
+      if (/^19\d{2}$/.test(year) && fmt.length === 2) {
+        return year.slice(-2);
       }
       if (fmt.length < 4 && fmt.length !== 2) {
         throw Error('非法格式字符串: y不支持1位或者3位');
       }
-      return v;
+      return year;
     }
+    const type = fmt[0];
+    let value = getValue[type](date);
+
     if (locale[fmt]) {
-      return locale[fmt][v];
+      return locale[fmt][value];
     }
     if (/M/.test(fmt)) {
-      v += 1;
+      value += 1;
     }
     if (/h/.test(fmt)) {
-      v = v % 12;
+      value %= 12;
     }
     let maxLength = /S/.test(fmt) ? 3 : 2;
-    return `${v}`.padStart(Math.min(fmt.length, maxLength), 0);
+    return `${value}`.padStart(Math.min(fmt.length, maxLength), 0);
   },
-  parse(v, type, fmt) {
+  parse(v, fmt, locale = defaultLocale) {
     if (locale[fmt]) {
-      return locale[fmt].findIndex(l => l.toLowerCase() === v.toLowerCase());
+      return { [fmt[0]]: locale[fmt].findIndex(l => l.toLowerCase() === v.toLowerCase()) };
     }
-    if (['y', 'Y'].includes(type)) {
+    if (/y/i.test(fmt)) {
       if (fmt.length === 2) {
-        return +v + 1900;
+        v = +v + 1900;
       }
-      return +v;
+      return { y: +v };
     }
-    if ('M' === type) {
-      return +v - 1;
+    if (/M/.test(fmt)) {
+      return { M: +v - 1 };
     }
-    if (['d', 'H', 'h', 'm', 's', 'S', 'E'].includes(type)) {
-      return +v;
-    }
-    if ('a' === type) {
-      return v.toLowerCase();
+    if (/[dHhmsSE]/.test(fmt)) {
+      return { [fmt[0]]: +v };
     }
   },
   defaults(v, type, now) {
@@ -79,6 +96,13 @@ const localeUtils = {
   },
 };
 
+function simpleDeepClone(option) {
+  return JSON.parse(JSON.stringify(option) || null);
+}
+function mergeLocale(option) {
+  return { ...simpleDeepClone(defaultLocale), ...simpleDeepClone(option) };
+}
+
 class Eiya {
   constructor(...args) {
     const date = new Date(...args);
@@ -87,7 +111,7 @@ class Eiya {
   }
 
   format(fmt) {
-    return Eiya.format(this.date, fmt);
+    return Eiya.locale(this.localLocale).format(this.date, fmt);
   }
   isLeapYear() {
     return Eiya.isLeapYear(this.date.getFullYear());
@@ -129,26 +153,15 @@ class Eiya {
     const date = eiya.isEiya ? eiya.date : eiya;
     return Eiya.compare(this.date, date, precision);
   }
+  locale(config) {
+    this.localLocale = mergeLocale(config);
+    return this;
+  }
 
   static format(date, fmt) {
     date = new Date(date);
-    let methodNames = {
-      y: f => localeUtils.format(date.getFullYear(), f),
-      M: f => localeUtils.format(date.getMonth(), f),
-      d: f => localeUtils.format(date.getDate(), f),
-      H: f => localeUtils.format(date.getHours(), f),
-      h: f => localeUtils.format(date.getHours(), f),
-      m: f => localeUtils.format(date.getMinutes(), f),
-      s: f => localeUtils.format(date.getSeconds(), f),
-      S: f => localeUtils.format(date.getMilliseconds(), f),
-      E: f => localeUtils.format(date.getDay(), f),
-      a: () => (date.getHours() > 11 ? 'pm' : 'am'),
-      A: () => (date.getHours() > 11 ? 'PM' : 'AM'),
-    };
-
-    return fmt.replace(/y+|M+|d+|H+|h+|m+|s+|S+|E+|a|A/g, match => {
-      const type = match[0];
-      return methodNames[type](match);
+    return fmt.replace(/Y+|y+|M+|d+|H+|h+|m+|s+|S+|E+|a|A/g, match => {
+      return localeUtils.format(date, match, this.localLocale);
     });
   }
   static parse(str, fmt) {
@@ -159,17 +172,17 @@ class Eiya {
     }
 
     const units = {};
-    Object.entries(match.groups || {}).forEach(([key, value]) => {
-      const [type, fmt] = key.split('_');
-      units[type] = localeUtils.parse(value, type, fmt);
+    Object.entries(match.groups || {}).forEach(([fmt, value]) => {
+      Object.assign(units, localeUtils.parse(value, fmt, this.localLocale));
     });
 
-    let { y, M, d, H, h, m, s, S, E, a } = units;
-    if (H > -1 && (h > -1 || a)) {
-      throw Error('非法格式字符串: H不能和h,a同时存在');
+    let { y, M, d, H, h, m, s, S, E, a, A } = units;
+    a = a || A;
+    if (H > -1 && (h > -1 || a > -1)) {
+      throw Error('非法格式字符串: H不能和h,a,A同时存在');
     }
-    if (+!!(h > -1) ^ +!!a) {
-      throw Error('非法格式字符串: h和a必须成对出现');
+    if (+(h > -1) ^ +(a > -1)) {
+      throw Error('非法格式字符串: h和a,A必须成对出现');
     }
 
     const now = new Date();
@@ -177,7 +190,7 @@ class Eiya {
     M = localeUtils.defaults(M, 'M', now);
     d = localeUtils.defaults(d, 'd', now);
     if (h > -1) {
-      H = localeUtils.defaults(a === 'am' ? h : h + 12, 'H', now);
+      H = h + a * 12;
     } else {
       H = localeUtils.defaults(H, 'H', now);
     }
@@ -206,7 +219,15 @@ class Eiya {
     return ((Math.abs(month - 6.5) + 1) & 1) + 30;
   }
   // 月份从0开始
-  static isValidDate(year = 1970, month = 0, date = 1, hour = 0, minute = 0, second = 0, millis = 0) {
+  static isValidDate(
+    year = new Date().getFullYear(),
+    month = 0,
+    date = 1,
+    hour = 0,
+    minute = 0,
+    second = 0,
+    millis = 0,
+  ) {
     if (year instanceof Date) {
       return year.toString() !== 'Invalid Date';
     }
@@ -448,35 +469,39 @@ class Eiya {
     );
     return maxDate.min;
   }
+  static locale(config) {
+    const ins = Object.create(Eiya);
+    ins.localLocale = mergeLocale(config);
+
+    return ins;
+  }
 }
 
-function buildReg(fmt) {
+function buildReg(fmt, locale = defaultLocale) {
   const regStr = fmt.replace(/y+|Y+|M+|d+|H+|h+|m+|s+|S+|E+|a+|A+/g, match => {
-    const type = match[0];
-
-    if (['y', 'Y'].includes(type)) {
+    if (/y/i.test(match)) {
       if (match.length === 2) {
-        return `(?<y_${match}>\\d{2})`;
+        return `(?<${match}>\\d{2})`;
       }
-      return `(?<y_${match}>\\d{1,})`;
+      return `(?<${match}>\\d{1,})`;
     }
-    if (['M', 'd', 'H', 'h', 'm', 's', 'E'].includes(type)) {
+    if (/[MdHhmsE]/.test(match)) {
       if (locale[match]) {
-        return `(?<${type}_${match}>${locale[match].join('|')})`;
+        return `(?<${match}>${locale[match].join('|')})`;
       }
       if (match.length === 2) {
-        return `(?<${type}_${match}>\\d{2})`;
+        return `(?<${match}>\\d{2})`;
       }
-      return `(?<${type}_${match}>\\d{1,2})`;
+      return `(?<${match}>\\d{1,2})`;
     }
-    if (type === 'S') {
+    if (/S/.test(match)) {
       if (match.length === 3) {
-        return `(?<${type}_${match}>\\d{3})`;
+        return `(?<${match}>\\d{3})`;
       }
-      return `(?<${type}_${match}>\\d{1,3})`;
+      return `(?<${match}>\\d{1,3})`;
     }
-    if (['a', 'A'].includes(type)) {
-      return `(?<a_${match}>am|pm|AM|PM)`;
+    if (/a/i.test(match)) {
+      return `(?<${match}>am|pm|AM|PM)`;
     }
   });
 
