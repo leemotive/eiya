@@ -185,15 +185,13 @@ describe('实例方法', () => {
       expect(
         eiya.isBetween(new Eiya(2019, 0, 1), new Eiya(2020, 3, 4), {
           precision: 'year',
-          left: 'open',
-          right: 'close',
+          boundary: '(]',
         }),
       ).toBeTruthy();
       expect(
         eiya.isBetween(new Eiya(2020, 0, 1), new Eiya(2020, 3, 4), {
           precision: 'year',
-          left: 'close',
-          right: 'close',
+          boundary: '[]',
         }),
       ).toBeTruthy();
     });
@@ -211,7 +209,7 @@ describe('实例方法', () => {
       expect(
         eiya.isBetween(new Eiya(2020, 3, 4), new Eiya(2021, 3, 4), {
           precision: 'date',
-          left: 'open',
+          boundary: '(]',
         }),
       ).toBeFalsy();
     });
@@ -222,7 +220,7 @@ describe('实例方法', () => {
       expect(
         eiya.isBetween(new Eiya(2020, 3, 4, 14, 15), new Eiya(2020, 3, 4, 14, 15), {
           precision: 'minute',
-          right: 'open',
+          boundary: '[)',
         }),
       ).toBeFalsy();
     });

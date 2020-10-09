@@ -266,7 +266,8 @@ class Eiya {
     if (typeof option === 'string') {
       option = { precision: option };
     }
-    const { precision = 'millisecond', easy = false, left = 'close', right = 'close' } = option;
+    const { precision = 'millisecond', easy = false, boundary = '[]' } = option;
+    const [left, right] = boundary.split('');
     const fmt = easy ? precisionMapIgnorePrefix[precision] : precisionMap[precision];
     date = Eiya.format(date, fmt);
     start = Eiya.format(start, fmt);
@@ -275,13 +276,13 @@ class Eiya {
     if (date < start) {
       return false;
     }
-    if (date === start && left === 'open') {
+    if (date === start && left === '(') {
       return false;
     }
     if (date > end) {
       return false;
     }
-    if (date === end && right === 'open') {
+    if (date === end && right === ')') {
       return false;
     }
     return true;
