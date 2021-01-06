@@ -198,7 +198,7 @@ class Eiya {
     s = localeUtils.defaults(s, 's', now);
     S = localeUtils.defaults(S, 'S', now);
 
-    if (!Eiya.isValidDate(y, M + 1, d, H, m, s, S)) {
+    if (!Eiya.isValidDate(y, M, d, H, m, s, S)) {
       throw Error('非法日期字符串');
     }
 

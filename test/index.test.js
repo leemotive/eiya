@@ -30,8 +30,8 @@ describe('格式化使用', () => {
 
 describe('解析使用', () => {
   test('常规解析', () => {
-    const date = Eiya.parse('2020/Oct/10 11:23:34 234', 'yyyy/MMM/dd HH:mm:ss SSS');
-    const beDate = new Date(2020, 9, 10, 11, 23, 34, 234);
+    const date = Eiya.parse('2020/Dec/10 11:23:34 234', 'yyyy/MMM/dd HH:mm:ss SSS');
+    const beDate = new Date(2020, 11, 10, 11, 23, 34, 234);
     expect(date.getTime()).toBe(beDate.getTime());
   });
   test('1900', () => {
