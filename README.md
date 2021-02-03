@@ -138,9 +138,9 @@ Eiya.startOf(now, 'date');
 
   @option {String, Object} 比较选项设置
 
-  	- option.precision 比较精度，支持year, month, date, hour, minute, second, millisecond, week。默认为millisecond
-  	- option.easy 是否只比较设置的精度，不考虑前置时间，如只比较月份而不用考虑年份
-  	- option 也可以传字符串，代表option.precision
+    - option.precision 比较精度，支持year, month, date, hour, minute, second, millisecond, week。默认为millisecond
+    - option.easy 是否只比较设置的精度，不考虑前置时间，如只比较月份而不用考虑年份
+    - option 也可以传字符串，代表option.precision
 
 - 示例
 
@@ -163,10 +163,9 @@ Eiya.startOf(now, 'date');
 
   @option {String,Object} 比较选项设置
 
-  	- option.precision 同 `Eiya.isSame` 中的设置
+   - option.precision 同 `Eiya.isSame` 中的设置
    - option.easy 同 `Eiya.isSame` 中的设置
-   - option.left  open:区间不包含起始边界， close:区间包含起始边界(默认)
-   - option.right open:区间不包含结束边界， close:区间包含结束边界(默认)
+   - option.boundary 是否包含左右边界，默认 `[]` 请参考数学区间定义
 
 - 示例
 
@@ -175,7 +174,7 @@ Eiya.startOf(now, 'date');
   const start = new Date(2020, 10, 15);
   const end = new Date(2020, 11, 15);
   Eiya.isBetween(date, start, end, 'date') // true
-  Eiya.isBetween(date, start, end, {precision: 'date', left: 'open'}) // false
+  Eiya.isBetween(date, start, end, {precision: 'date', boundary: '(]'}) // false
   ```
 
 > Eiya.isAfter(date, target, option)
@@ -190,7 +189,7 @@ Eiya.startOf(now, 'date');
 
   @param option 参数同 `Eiya.isSame` 支持 precision, easy, self
 
-  	- option.self 表示是否包含target日期
+    - option.self 表示是否包含target日期
 
 > Eiya.isBefore(date, target, option)
 
@@ -212,9 +211,9 @@ Eiya.startOf(now, 'date');
 
   @param {String, Object} option 运算选项设置
 
-  	- option.precision 需要在哪个单位上进行加运算，支持 year, month, date, hour, minute, second, millisecond, week
-  	- option.end 是否月末对齐
-  	- option.overstep 超过月份最大日期，是否跨到下一月
+    - option.precision 需要在哪个单位上进行加运算，支持 year, month, date, hour, minute, second, millisecond, week
+    - option.end 是否月末对齐
+    - option.overstep 超过月份最大日期，是否跨到下一月
 
 - 示例
 
