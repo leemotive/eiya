@@ -58,6 +58,7 @@ interface LocaleSymbol {
   EEEEE?: FixedSizeArray<7, string>;
   a?: FixedSizeArray<2, string>;
   A?: FixedSizeArray<2, string>;
+  [K: string]: FixedSizeArray<2, string> | FixedSizeArray<7, string> | FixedSizeArray<12, string> | undefined;
 }
 
 const defaultLocale: LocaleSymbol = {
@@ -612,13 +613,6 @@ class Eiya {
       { date: Eiya.format(args[0], fmt), min: args[0] },
     );
     return maxDate.min;
-  }
-
-  static locale(config?: LocaleSymbol) {
-    const ins = <Eiya>Object.create(Eiya);
-    ins.localLocale = mergeLocale(config);
-
-    return ins;
   }
 }
 

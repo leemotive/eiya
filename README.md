@@ -38,7 +38,7 @@ Eiya.startOf(now, 'date');
 
 ### 静态方法
 
->  Eiya.format(date, fmt)
+>  Eiya.format(date, fmt, locale)
 
 - 概述
 
@@ -50,14 +50,18 @@ Eiya.startOf(now, 'date');
 
   @param {String} fmt 格式化字符串, 支持的格式请参考[格式说明](#格式说明)
 
+  @param {LocaleSymbol} locale 当次格式化使用的格式定义
+
 - 示例
 
   ```javascript
   Eiya.format(new Date(2020, 10, 10, 12, 14, 45, 453), 'yyyy/MM/dd HH:mm:ss SSS');
   // 2020/11/10 12:14:45 453
+  Eiya.format(new Date(2020, 10, 10, 12, 14, 45, 453), 'EEE', {EEE: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']});
+  // Tu
   ```
 
-> Eiya.parse(str, fmt)
+> Eiya.parse(str, fmt, locale)
 
  - 概述
 
@@ -68,6 +72,8 @@ Eiya.startOf(now, 'date');
   @param {String} str 表示日期的字符串
 
   @param {String} fmt 日期字符串的格式
+
+  @param {LocaleSymbol} locale 当次解析使用的格式定义
 
 - 示例
 
@@ -290,30 +296,13 @@ Eiya.startOf(now, 'date');
 
    返回参数日期列表中最小的日期，第一个参数可以是精度设置，支持 `precision` 和 `easy` 
 
-> Eiya.locale(config)
-
- - 概述
-
-   配置本次的格式，链式调用format，parse进行格式化和解析
-
-- 参数
-
-  支持的配置请参考下面的格式说明
-
-- 示例
-
-  ```js
-  const date = new Date(2020, 1, 12, 12, 24, 45, 235);
-  Eiya.locale({EEE: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']}).format(date, 'EEE');  // We
-  ```
-
-  
-
 
 
 ### 实例方法
 
 实例方法和方法基本一致，没有，`parse`, `max`, `min` 等方法，实例方法接收的日期参数不仅可以是Date实例对象，还可以是Eiya实例对象。并且操作型的方法，add, subtract, startOf, endOf, clone 支持链式调用
+
+
 
 
 
