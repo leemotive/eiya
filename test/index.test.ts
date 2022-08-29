@@ -1,6 +1,6 @@
 /* global describe, test, expect */
 
-import Eiya from '../index.js';
+import Eiya, { Units } from '../src/index';
 
 describe('格式化使用', () => {
   const now = new Eiya(2020, 9, 4, 9, 34, 55, 234);
@@ -87,6 +87,7 @@ describe('静态方法', () => {
   });
   describe('clone', () => {
     const args = [2019, 11, 12, 12, 23, 43, 899];
+    // @ts-expect-error 忽略参数展开
     expect(Eiya.clone(new Date(...args)).getTime()).toBe(new Date(...args).getTime());
   });
   describe('max', () => {
@@ -284,7 +285,7 @@ describe('实例方法', () => {
       expect(eiya.subtract(1, 'year').format('yyyyMMdd')).toBe('20200229');
     });
     test('周', () => {
-      expect(eiya.subtract(1, 'week').format('yyyyMMdd')).toBe('20210221');
+      expect(eiya.subtract(1, Units.WEEK).format('yyyyMMdd')).toBe('20210221');
     });
   });
 
@@ -307,7 +308,7 @@ describe('实例方法', () => {
     test('时', () => expect(eiya.endOf('hour').format('yyyyMMdd HHmmss SSS')).toBe('20200330 145959 999'));
     test('分', () => expect(eiya.endOf('minute').format('yyyyMMdd HHmmss SSS')).toBe('20200330 141559 999'));
     test('秒', () => expect(eiya.endOf('second').format('yyyyMMdd HHmmss SSS')).toBe('20200330 141516 999'));
-    test('周', () => expect(eiya.endOf('week').format('yyyyMMdd HHmmss SSS')).toBe('20200404 235959 999'));
+    test('周', () => expect(eiya.endOf(Units.WEEK).format('yyyyMMdd HHmmss SSS')).toBe('20200404 235959 999'));
   });
 
   describe('clone', () => {
@@ -332,7 +333,7 @@ describe('locale', () => {
 
 describe('异常', () => {
   test('y不支持1位或者3位', () => {
-    let date = new Eiya(2020, 9, 4, 12, 34, 55, 234);
+    const date = new Eiya(2020, 9, 4, 12, 34, 55, 234);
     expect(() => date.format('yyy/MM/dd HH:mm:ss SSS')).toThrow('非法格式字符串: y不支持1位或者3位');
   });
   test('日期字符串和格式字符串不匹配', () => {
@@ -360,10 +361,13 @@ describe('异常', () => {
     expect(() => Eiya.parse('2020/10/04 12:34:55 Mon', 'yyyy/MM/dd HH:mm:ss EEE')).toThrow('非法日期字符串');
   });
   test('add 精度不存在', () => {
+    // @ts-expect-error 忽略精度错误
     expect(() => new Eiya().add(1, 'minutes')).toThrow('not valid precision');
   });
   test('startOf/endOf 精度不支持毫秒', () => {
+    // @ts-expect-error 忽略精度错误
     expect(() => new Eiya().startOf('millisecond')).toThrow('错误的精度');
+    // @ts-expect-error 忽略精度错误
     expect(() => new Eiya().endOf('millisecond')).toThrow('错误的精度');
   });
 });
